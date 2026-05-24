@@ -1,0 +1,72 @@
+--// PLAYER LEAVE GAME NOTIFIER TO DISCORD
+--// Hanya kirim notif jika LOCAL PLAYER yang keluar
+
+local Players = game:GetService("Players")
+local HttpService = game:GetService("HttpService")
+
+---------------------------------------------------
+-- CONFIG
+---------------------------------------------------
+
+local WEBHOOK_URL = "https://discord.com/api/webhooks/1457402756544598128/wFlBWO1pIlF6u41dJz40bvLKiI0xVwNk1l4QaId8O4W_ytwz6RT4b2SoHMenEE1KNOwK"
+
+---------------------------------------------------
+-- HTTP REQUEST FUNCTION
+---------------------------------------------------
+
+local requestFunc =
+    (syn and syn.request) or
+    (http and http.request) or
+    http_request or
+    request
+
+---------------------------------------------------
+-- LOCAL PLAYER
+---------------------------------------------------
+
+local LocalPlayer = Players.LocalPlayer
+
+---------------------------------------------------
+-- SEND WEBHOOK
+---------------------------------------------------
+
+local function sendWebhook(playerName, userId)
+    if not requestFunc then
+        warn("Executor doesn't support HTTP requests")
+        return
+    end
+
+    local data = {
+        ["embeds"] = {{
+            ["title"] = "🚪 Local Player Left Game",
+            ["description"] =
+                "**Player:** "..playerName..
+                "\n**UserId:** "..userId..
+                "\n**Time:** "..os.date("%X"),
+            ["color"] = 16753920
+        }}
+    }
+
+    pcall(function()
+        requestFunc({
+            Url = WEBHOOK_URL,
+            Method = "POST",
+            Headers = {
+                ["Content-Type"] = "application/json"
+            },
+            Body = HttpService:JSONEncode(data)
+        })
+    end)
+end
+
+---------------------------------------------------
+-- DETECT LOCAL PLAYER LEAVE
+---------------------------------------------------
+
+Players.PlayerRemoving:Connect(function(player)
+    if player == LocalPlayer then
+        sendWebhook(player.Name, player.UserId)
+    end
+end)
+
+print("Local Player Leave Discord Notifier Loaded")
