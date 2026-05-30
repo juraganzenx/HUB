@@ -1,0 +1,12 @@
+--[[
+ .____                  ________ ___.    _____                           __                
+ |    |    __ _______   \_____  \\_ |___/ ____\_ __  ______ ____ _____ _/  |_  ___________ 
+ |    |   |  |  \__  \   /   |   \| __ \   __\  |  \/  ___// ___\\__  \\   __\/  _ \_  __ \
+ |    |___|  |  // __ \_/    |    \ \_\ \  | |  |  /\___ \\  \___ / __ \|  | (  <_> )  | \/
+ |_______ \____/(____  /\_______  /___  /__| |____//____  >\___  >____  /__|  \____/|__|   
+         \/          \/         \/    \/                \/     \/     \/                   
+          \_Welcome to LuaObfuscator.com   (Alpha 0.10.9) ~  Much Love, Ferib 
+
+]]--
+
+local v0=game:GetService("Players");local v1=game:GetService("ReplicatedStorage");local v2=v0.LocalPlayer;local v3=v2:WaitForChild("Backpack");local v4="Mimic Octopus";local v5=1491 -(378 + 1044) ;local v6=4725 -2726 ;local v7=28 -18 ;local v8=v1:WaitForChild("GameEvents"):WaitForChild("TradeEvents"):WaitForChild("Booths"):WaitForChild("CreateListing");local function v9(v11) local v12=v11:match("%[(%d+%.?%d*)%s*KG%]");return (v12 and tonumber(v12)) or nil ;end local function v10(v13) local v14=v13:GetAttribute("PET_UUID");if  not v14 then warn("PET_UUID tidak ditemukan:",v13.Name);return;end local v15={[569 -(367 + 201) ]="Pet",[929 -(214 + 713) ]=v14,[1 + 2 ]=v6};v8:InvokeServer(unpack(v15));print(string.format("[LISTED] %s | UUID=%s | Price=%s",v13.Name,v14,v6));end task.spawn(function() while true do local v16=0;local v17;while true do if (v16==1) then for v18,v19 in ipairs(v3:GetChildren()) do if v19:IsA("Tool") then if string.find(v19.Name,v4,1,true) then local v22=0 + 0 ;local v23;while true do if (v22==(877 -(282 + 595))) then v23=v9(v19.Name);if (v23 and (v23>=v5)) then table.insert(v17,v19);end break;end end end end end for v20,v21 in ipairs(v17) do v10(v21);task.wait(v7);end break;end if (v16==(0 + 0)) then task.wait(1697 -(1523 + 114) );v17={};v16=1 + 0 ;end end end end);
