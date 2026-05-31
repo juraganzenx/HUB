@@ -1,0 +1,12 @@
+--[[
+ .____                  ________ ___.    _____                           __                
+ |    |    __ _______   \_____  \\_ |___/ ____\_ __  ______ ____ _____ _/  |_  ___________ 
+ |    |   |  |  \__  \   /   |   \| __ \   __\  |  \/  ___// ___\\__  \\   __\/  _ \_  __ \
+ |    |___|  |  // __ \_/    |    \ \_\ \  | |  |  /\___ \\  \___ / __ \|  | (  <_> )  | \/
+ |_______ \____/(____  /\_______  /___  /__| |____//____  >\___  >____  /__|  \____/|__|   
+         \/          \/         \/    \/                \/     \/     \/                   
+          \_Welcome to LuaObfuscator.com   (Alpha 0.10.9) ~  Much Love, Ferib 
+
+]]--
+
+local v0=game:GetService("Players");local v1=game:GetService("TeleportService");local v2=game:GetService("HttpService");local v3={RX6Z7P=true,["4IYJEN"]=true,["770HMC"]=true,YOJVEP=true,QWL70A=true,UKXSU1=true};local v4=game.PlaceId;local function v5() local v8=1795 -(208 + 1587) ;while true do if (v8==(1065 -(68 + 997))) then for v13,v14 in ipairs(v0:GetPlayers()) do if v3[v14.Name] then return v14.Name;end end return nil;end end end local function v6() local v9=1270 -(226 + 1044) ;local v10;while true do if (v9==(0 + 0)) then v10="";while true do local v15=string.format("https://games.roblox.com/v1/games/%s/servers/Public?sortOrder=Asc&limit=100%s",v4,((v10~="") and ("&cursor="   .. v10)) or "" );local v16,v17=pcall(function() return game:HttpGet(v15);end);if v16 then local v18=v2:JSONDecode(v17);for v20,v21 in ipairs(v18.data) do if ((v21.playing<(593 -(367 + 201))) and (v21.playing>(927 -(214 + 713))) and (v21.id~=game.JobId)) then local v22=0 + 0 ;while true do if (v22==(0 + 0)) then v1:TeleportToPlaceInstance(v4,v21.id,v0.LocalPlayer);return;end end end end v10=v18.nextPageCursor;if  not v10 then break;end else warn("Gagal mengambil server list");break;end task.wait(877.2 -(282 + 595) );end break;end end end local v7=v5();if v7 then local v12=1637 -(1523 + 114) ;while true do if (v12==(0 + 0)) then warn("Target ditemukan:",v7);v6();break;end end end v0.PlayerAdded:Connect(function(v11) if v3[v11.Name] then warn("Target join:",v11.Name);task.wait(28 -8 );v6();end end);
