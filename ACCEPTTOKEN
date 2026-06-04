@@ -1,0 +1,270 @@
+-- ================= GLOBAL FLAG =================
+local autoAcceptRunning = false -- kontrol auto accept gift
+
+-- ================= AUTO ACCEPT GIFT =================
+local function startGiftAutoAccept()
+    local player = game.Players.LocalPlayer
+    local playerGui = player:WaitForChild("PlayerGui")
+    local GuiService = game:GetService("GuiService")
+    local VirtualInputManager = game:GetService("VirtualInputManager")
+    local giftNotif = playerGui:WaitForChild("Gift_Notification")
+
+    local function isAcceptButton(btn)
+        if not (btn:IsA("TextButton") or btn:IsA("ImageButton")) then return false end
+        if not btn.Visible then return false end
+        local text = btn:IsA("TextButton") and string.lower(btn.Text) or ""
+        local name = string.lower(btn.Name)
+        return string.find(text,"accept") or string.find(name,"accept")
+    end
+
+    local function clickAccept(btn)
+        task.spawn(function()
+            if not autoAcceptRunning then return end
+            task.wait(0.1)
+            GuiService.SelectedObject = btn
+            task.wait(0.05)
+            VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.Return, false, game)
+            VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.Return, false, game)
+            task.wait(0.05)
+            GuiService.SelectedObject = nil
+        end)
+    end
+
+    local function tryHandle(obj)
+        if not autoAcceptRunning then return end
+        if isAcceptButton(obj) then clickAccept(obj) end
+    end
+
+    for _, v in pairs(giftNotif:GetDescendants()) do tryHandle(v) end
+    giftNotif.DescendantAdded:Connect(function(desc) tryHandle(desc) end)
+end
+
+-- ================= AUTO TRADE GUI =================
+local function addtrade()
+    local Players = game:GetService("Players")
+    local ReplicatedStorage = game:GetService("ReplicatedStorage")
+    local UIS = game:GetService("UserInputService")
+
+    local player = Players.LocalPlayer
+    local backpack = player:WaitForChild("Backpack")
+
+    local tradeEvents = ReplicatedStorage:WaitForChild("GameEvents"):WaitForChild("TradeEvents")
+    local addItemEvent = tradeEvents:WaitForChild("AddItem")
+    local acceptEvent = tradeEvents:WaitForChild("Accept")
+    local confirmEvent = tradeEvents:WaitForChild("Confirm")
+
+    local running = false
+    local selectedPets = {}
+
+    -- ================= GUI =================
+    local gui = Instance.new("ScreenGui")
+    gui.Name = "TradeGUI"
+    gui.ResetOnSpawn = false
+    gui.Parent = player:WaitForChild("PlayerGui")
+
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(0, 300, 0, 300)
+    frame.Position = UDim2.new(0.5, -150, 0.5, -150)
+    frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    frame.Parent = gui
+
+    -- add radius
+    local uicorner = Instance.new("UICorner")
+    uicorner.CornerRadius = UDim.new(0,10)
+    uicorner.Parent = frame
+
+    -- title bar
+    local title = Instance.new("TextLabel")
+    title.Size = UDim2.new(1, 0, 0, 30)
+    title.Text = "Auto Trade (Multi Select)"
+    title.TextColor3 = Color3.new(1,1,1)
+    title.BackgroundColor3 = Color3.fromRGB(35,35,35)
+    title.Parent = frame
+
+    local uicornerTitle = Instance.new("UICorner")
+    uicornerTitle.CornerRadius = UDim.new(0,10)
+    uicornerTitle.Parent = title
+
+    -- close button
+    local closeBtn = Instance.new("TextButton")
+    closeBtn.Size = UDim2.new(0, 30, 0, 30)
+    closeBtn.Position = UDim2.new(1, -35, 0, 0)
+    closeBtn.Text = "X"
+    closeBtn.TextColor3 = Color3.new(1,0,0)
+    closeBtn.BackgroundColor3 = Color3.fromRGB(50,50,50)
+    closeBtn.Parent = frame
+
+    local uicornerClose = Instance.new("UICorner")
+    uicornerClose.CornerRadius = UDim.new(0,5)
+    uicornerClose.Parent = closeBtn
+
+    closeBtn.MouseButton1Click:Connect(function()
+        gui:Destroy()
+        running = false
+        autoAcceptRunning = false
+    end)
+
+    -- drag
+    local dragging, dragStart, startPos, dragInput
+    title.Active = true
+    title.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true
+            dragStart = input.Position
+            startPos = frame.Position
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then dragging = false end
+            end)
+        end
+    end)
+
+    UIS.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement then
+            dragInput = input
+        end
+    end)
+
+    UIS.InputChanged:Connect(function(input)
+        if dragging and input == dragInput then
+            local delta = input.Position - dragStart
+            frame.Position = UDim2.new(
+                startPos.X.Scale,
+                startPos.X.Offset + delta.X,
+                startPos.Y.Scale,
+                startPos.Y.Offset + delta.Y
+            )
+        end
+    end)
+
+    -- search box
+    local searchBox = Instance.new("TextBox")
+    searchBox.Size = UDim2.new(1, -20, 0, 25)
+    searchBox.Position = UDim2.new(0,10,0,40)
+    searchBox.PlaceholderText = "Search Pet..."
+    searchBox.Text = ""
+    searchBox.ClearTextOnFocus = false
+    searchBox.Parent = frame
+
+    local dropdownBtn = Instance.new("TextButton")
+    dropdownBtn.Size = UDim2.new(1, -20, 0, 25)
+    dropdownBtn.Position = UDim2.new(0, 10, 0, 70)
+    dropdownBtn.Text = "Select Pets"
+    dropdownBtn.Parent = frame
+
+    local listFrame = Instance.new("ScrollingFrame")
+    listFrame.Size = UDim2.new(1, -20, 0, 150)
+    listFrame.Position = UDim2.new(0, 10, 0, 100)
+    listFrame.BackgroundColor3 = Color3.fromRGB(40,40,40)
+    listFrame.Visible = false
+    listFrame.ScrollBarThickness = 6
+    listFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
+    listFrame.Parent = frame
+
+    local layout = Instance.new("UIListLayout")
+    layout.Parent = listFrame
+
+    local toggleBtn = Instance.new("TextButton")
+    toggleBtn.Size = UDim2.new(1, -20, 0, 30)
+    toggleBtn.Position = UDim2.new(0,10,1,-40)
+    toggleBtn.Text = "START"
+    toggleBtn.Parent = frame
+
+    -- functions
+    local function getUniquePets()
+        local pets = {}
+        local seen = {}
+        for _, tool in ipairs(backpack:GetChildren()) do
+            if tool:IsA("Tool") then
+                local uuid = tool:GetAttribute("PET_UUID")
+                local f = tool:GetAttribute("f")
+                if uuid and f and not seen[f] then
+                    seen[f] = true
+                    table.insert(pets, f)
+                end
+            end
+        end
+        return pets
+    end
+    
+    local function updateButtonText()
+        if #selectedPets==0 then
+            dropdownBtn.Text = "Select Pets"
+        else
+            dropdownBtn.Text = "Pets: "..table.concat(selectedPets,", ")
+        end
+    end
+
+    local function refreshDropdown()
+        for _, v in ipairs(listFrame:GetChildren()) do
+            if v:IsA("TextButton") then v:Destroy() end
+        end
+
+        local pets = getUniquePets()
+        local selected = {}
+        local unselected = {}
+        for _, petName in ipairs(pets) do
+            if table.find(selectedPets, petName) then
+                table.insert(selected, petName)
+            else
+                table.insert(unselected, petName)
+            end
+        end
+
+        local orderedPets = {}
+        for _, v in ipairs(selected) do table.insert(orderedPets,v) end
+        for _, v in ipairs(unselected) do table.insert(orderedPets,v) end
+
+        local searchText = string.lower(searchBox.Text)
+        local finalPets = {}
+        for _, petName in ipairs(orderedPets) do
+            if string.find(string.lower(petName),searchText) then
+                table.insert(finalPets,petName)
+            end
+        end
+
+        for _, petName in ipairs(finalPets) do
+            local btn = Instance.new("TextButton")
+            btn.Size = UDim2.new(1,-5,0,25)
+            btn.Text = table.find(selectedPets,petName) and "✔ "..petName or petName
+            btn.Parent = listFrame
+            btn.MouseButton1Click:Connect(function()
+                local index = table.find(selectedPets,petName)
+                if index then
+                    table.remove(selectedPets,index)
+                else
+                    table.insert(selectedPets,petName)
+                end
+                updateButtonText()
+                refreshDropdown()
+            end)
+        end
+    end
+
+    searchBox:GetPropertyChangedSignal("Text"):Connect(refreshDropdown)
+    dropdownBtn.MouseButton1Click:Connect(function()
+        listFrame.Visible = not listFrame.Visible
+        refreshDropdown()
+    end)
+
+    toggleBtn.MouseButton1Click:Connect(function()
+        running = not running
+        autoAcceptRunning = running
+        toggleBtn.Text = running and "STOP" or "START"
+    end)
+
+    -- AUTO TRADE LOOP + AUTO ACCEPT
+    task.spawn(function()
+    startGiftAutoAccept()
+
+    while running do
+        acceptEvent:FireServer()
+        task.wait(2)
+
+        confirmEvent:FireServer()
+        task.wait(2)
+    end
+end)
+end
+
+-- ================= RUN =================
+addtrade()
