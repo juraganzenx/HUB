@@ -1,9 +1,7 @@
-local autoRunning = true
-
 local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local GuiService = game:GetService("GuiService")
 local VirtualInputManager = game:GetService("VirtualInputManager")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local player = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
@@ -16,27 +14,28 @@ local confirmEvent = tradeEvents:WaitForChild("Confirm")
 task.spawn(function()
     local giftNotif = playerGui:WaitForChild("Gift_Notification")
 
-    local function isAcceptButton(btn)
-        if not (btn:IsA("TextButton") or btn:IsA("ImageButton")) then
+    local function isAcceptButton(obj)
+        if not (obj:IsA("TextButton") or obj:IsA("ImageButton")) then
             return false
         end
 
-        if not btn.Visible then
+        if not obj.Visible then
             return false
         end
 
-        local text = btn:IsA("TextButton") and string.lower(btn.Text) or ""
-        local name = string.lower(btn.Name)
+        local text = obj:IsA("TextButton") and string.lower(obj.Text) or ""
+        local name = string.lower(obj.Name)
 
         return string.find(text, "accept")
             or string.find(name, "accept")
     end
 
-    local function clickAccept(btn)
+    local function clickButton(btn)
         task.spawn(function()
             task.wait(0.1)
 
             GuiService.SelectedObject = btn
+            task.wait(0.05)
 
             VirtualInputManager:SendKeyEvent(
                 true,
@@ -52,13 +51,14 @@ task.spawn(function()
                 game
             )
 
+            task.wait(0.05)
             GuiService.SelectedObject = nil
         end)
     end
 
     local function handle(obj)
         if isAcceptButton(obj) then
-            clickAccept(obj)
+            clickButton(obj)
         end
     end
 
@@ -71,11 +71,17 @@ end)
 
 -- AUTO ACCEPT + CONFIRM TRADE
 task.spawn(function()
-    while autoRunning do
-        acceptEvent:FireServer()
+    while true do
+        pcall(function()
+            acceptEvent:FireServer()
+        end)
+
         task.wait(2)
 
-        confirmEvent:FireServer()
+        pcall(function()
+            confirmEvent:FireServer()
+        end)
+
         task.wait(2)
     end
 end)
