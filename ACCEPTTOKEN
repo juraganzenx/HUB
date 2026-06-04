@@ -1,3 +1,4 @@
+-- ACCEPT TOKEN
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local GuiService = game:GetService("GuiService")
@@ -32,10 +33,10 @@ task.spawn(function()
 
     local function clickButton(btn)
         task.spawn(function()
-            task.wait(0.1)
-
             GuiService.SelectedObject = btn
-            task.wait(0.05)
+
+            -- tunggu 1 detik sebelum tekan Enter
+            task.wait(1)
 
             VirtualInputManager:SendKeyEvent(
                 true,
