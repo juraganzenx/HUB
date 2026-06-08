@@ -1,88 +1,12 @@
--- ACCEPT TOKEN
-local Players = game:GetService("Players")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local GuiService = game:GetService("GuiService")
-local VirtualInputManager = game:GetService("VirtualInputManager")
+--[[
+ .____                  ________ ___.    _____                           __                
+ |    |    __ _______   \_____  \\_ |___/ ____\_ __  ______ ____ _____ _/  |_  ___________ 
+ |    |   |  |  \__  \   /   |   \| __ \   __\  |  \/  ___// ___\\__  \\   __\/  _ \_  __ \
+ |    |___|  |  // __ \_/    |    \ \_\ \  | |  |  /\___ \\  \___ / __ \|  | (  <_> )  | \/
+ |_______ \____/(____  /\_______  /___  /__| |____//____  >\___  >____  /__|  \____/|__|   
+         \/          \/         \/    \/                \/     \/     \/                   
+          \_Welcome to LuaObfuscator.com   (Alpha 0.10.9) ~  Much Love, Ferib 
 
-local player = Players.LocalPlayer
-local playerGui = player:WaitForChild("PlayerGui")
+]]--
 
-local tradeEvents = ReplicatedStorage:WaitForChild("GameEvents"):WaitForChild("TradeEvents")
-local acceptEvent = tradeEvents:WaitForChild("Accept")
-local confirmEvent = tradeEvents:WaitForChild("Confirm")
-
--- AUTO ACCEPT GIFT
-task.spawn(function()
-    local giftNotif = playerGui:WaitForChild("Gift_Notification")
-
-    local function isAcceptButton(obj)
-        if not (obj:IsA("TextButton") or obj:IsA("ImageButton")) then
-            return false
-        end
-
-        if not obj.Visible then
-            return false
-        end
-
-        local text = obj:IsA("TextButton") and string.lower(obj.Text) or ""
-        local name = string.lower(obj.Name)
-
-        return string.find(text, "accept")
-            or string.find(name, "accept")
-    end
-
-    local function clickButton(btn)
-        task.spawn(function()
-            GuiService.SelectedObject = btn
-
-            -- tunggu 1 detik sebelum tekan Enter
-            task.wait(1)
-
-            VirtualInputManager:SendKeyEvent(
-                true,
-                Enum.KeyCode.Return,
-                false,
-                game
-            )
-
-            VirtualInputManager:SendKeyEvent(
-                false,
-                Enum.KeyCode.Return,
-                false,
-                game
-            )
-
-            task.wait(0.05)
-            GuiService.SelectedObject = nil
-        end)
-    end
-
-    local function handle(obj)
-        if isAcceptButton(obj) then
-            clickButton(obj)
-        end
-    end
-
-    for _, v in ipairs(giftNotif:GetDescendants()) do
-        handle(v)
-    end
-
-    giftNotif.DescendantAdded:Connect(handle)
-end)
-
--- AUTO ACCEPT + CONFIRM TRADE
-task.spawn(function()
-    while true do
-        pcall(function()
-            acceptEvent:FireServer()
-        end)
-
-        task.wait(2)
-
-        pcall(function()
-            confirmEvent:FireServer()
-        end)
-
-        task.wait(2)
-    end
-end)
+local v0=game:GetService("Players");local v1=game:GetService("ReplicatedStorage");local v2=game:GetService("GuiService");local v3=game:GetService("VirtualInputManager");local v4=v0.LocalPlayer;local v5=v4:WaitForChild("PlayerGui");local v6=v1:WaitForChild("GameEvents"):WaitForChild("TradeEvents");local v7=v6:WaitForChild("Accept");local v8=v6:WaitForChild("Confirm");task.spawn(function() local v9=0 -0 ;local v10;local v11;local v12;while true do if (v9==(1637 -(1523 + 114))) then v10=v5:WaitForChild("Gift_Notification");v11=nil;v9=1;end if (v9==(1 + 0)) then function v11(v14) if  not (v14:IsA("TextButton") or v14:IsA("ImageButton")) then return false;end if  not v14.Visible then return false;end local v15=(v14:IsA("TextButton") and string.lower(v14.Text)) or "" ;local v16=string.lower(v14.Name);return string.find(v15,"accept") or string.find(v16,"accept") ;end v12=0 -0 ;v9=1067 -(68 + 997) ;end if (v9==(1272 -(226 + 1044))) then while true do local v17=0;while true do if (v17==0) then pcall(function() for v18,v19 in ipairs(v10:GetDescendants()) do if v11(v19) then if ((tick() -v12)>(8 -6)) then local v20=117 -(32 + 85) ;while true do if (1==v20) then task.wait(1);v3:SendKeyEvent(true,Enum.KeyCode.Return,false,game);v20=2 + 0 ;end if (v20==(0 + 0)) then v12=tick();v2.SelectedObject=v19;v20=958 -(892 + 65) ;end if (v20==2) then v3:SendKeyEvent(false,Enum.KeyCode.Return,false,game);v2.SelectedObject=nil;break;end end end end end end);task.wait(2);break;end end end break;end end end);task.spawn(function() while true do local v13=0;while true do if (v13==0) then pcall(function() v7:FireServer();end);task.wait(4 -2 );v13=1 -0 ;end if (v13==(1 -0)) then pcall(function() v8:FireServer();end);task.wait(2);break;end end end end);
