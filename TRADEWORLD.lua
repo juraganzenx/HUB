@@ -8,7 +8,8 @@ local state = {
     HarvestAll = false,
     SellAll = false,
     SpeedHub = false,
-    BuyPet = false
+    BuyPet = false,
+    ToGarden = false
 }
 
 --// LOAD CONFIG
@@ -184,6 +185,7 @@ local bgHarvestAll, circleHarvest, clickHarvest = createToggle("HarvestAll")
 local bgSellAll, circleSell, clickSell = createToggle("SellAll")
 local bgSpeedHub, circleSpeed, clickSpeed = createToggle("SpeedHub")
 local bgBuyPet, circleBuyPet, clickBuyPet = createToggle("BuyPet")
+local bgToGarden, circleToGarden, clickToGarden = createToggle("ToGarden")
 
 --// UI UPDATE
 local function setUI(enabled, bg, circle)
@@ -215,6 +217,7 @@ local function update()
     setUI(state.SellAll, bgSellAll, circleSell)
     setUI(state.SpeedHub, bgSpeedHub, circleSpeed)
     setUI(state.BuyPet, bgBuyPet, circleBuyPet)
+    setUI(state.ToGarden, bgToGarden, circleToGarden)
 end
 
 update()
@@ -291,6 +294,17 @@ clickBuyPet.MouseButton1Click:Connect(function()
     end
 end)
 
+clickToGarden.MouseButton1Click:Connect(function()
+    state.ToGarden = not state.ToGarden
+    save()
+    update()
+
+    if state.ToGarden then
+        run("https://raw.githubusercontent.com/juraganzenx/HUB2/refs/heads/main/TOGARDEN")
+    end
+end)
+
+
 --// AUTO RUN ON START
 for k, v in pairs(state) do
     if v then
@@ -309,6 +323,10 @@ for k, v in pairs(state) do
 
         if k == "BuyPet" then
             run("https://raw.githubusercontent.com/juraganzenx/HUB2/refs/heads/main/BUYWILDPET")
+        end
+
+        if k == "ToGarden" then
+            run("https://raw.githubusercontent.com/juraganzenx/HUB2/refs/heads/main/TOGARDEN")
         end
 
     end
