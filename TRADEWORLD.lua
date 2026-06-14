@@ -280,7 +280,7 @@ clickSpeed.MouseButton1Click:Connect(function()
     update()
 
     if state.SpeedHub then
-        run("https://raw.githubusercontent.com/AhmadV99/Speed-Hub-X/main/Speed%20Hub%20X.lua")
+        run("https://raw.githubusercontent.com/juraganzenx/HUB2/refs/heads/main/SPEED")
     end
 end)
 
@@ -318,7 +318,7 @@ for k, v in pairs(state) do
         end
 
         if k == "SpeedHub" then
-            run("https://raw.githubusercontent.com/AhmadV99/Speed-Hub-X/main/Speed%20Hub%20X.lua")
+            run("https://raw.githubusercontent.com/juraganzenx/HUB2/refs/heads/main/SPEED")
         end
 
         if k == "BuyPet" then
