@@ -13,7 +13,9 @@ local state = {
     SpeedHub = false,
     BuyPet = false,
     ToGarden = false,
-    CollectSeed = false
+    CollectSeed = false,
+    NotifDiscord = false,
+    HopIf12M = false
 }
 
 -- LOAD CONFIG DARI GITHUB
@@ -190,6 +192,8 @@ local bgSpeedHub, circleSpeed, clickSpeed = createToggle("SpeedHub")
 local bgBuyPet, circleBuyPet, clickBuyPet = createToggle("BuyPet")
 local bgToGarden, circleToGarden, clickToGarden = createToggle("ToGarden")
 local bgCollectSeed, circleCollectSeed, clickCollectSeed = createToggle("CollectSeed")
+local bgNotifDiscord, circleNotifDiscord, clickNotifDiscord = createToggle("NotifDiscord")
+local bgHopIf12M, circleHopIf12M, clickHopIf12M = createToggle("Hop If >12M")
 
 --// UI UPDATE
 local function setUI(enabled, bg, circle)
@@ -223,6 +227,9 @@ local function update()
     setUI(state.BuyPet, bgBuyPet, circleBuyPet)
     setUI(state.ToGarden, bgToGarden, circleToGarden)
     setUI(state.CollectSeed, bgCollectSeed, circleCollectSeed)
+    setUI(state.NotifDiscord, bgNotifDiscord, circleNotifDiscord)
+    setUI(state.HopIf12M, bgHopIf12M, circleHopIf12M)
+
 end
 
 update()
@@ -319,6 +326,26 @@ clickCollectSeed.MouseButton1Click:Connect(function()
     end
 end)
 
+clickNotifDiscord.MouseButton1Click:Connect(function()
+    state.NotifDiscord = not state.NotifDiscord
+    save()
+    update()
+
+    if state.NotifDiscord then
+        run("https://raw.githubusercontent.com/juraganzenx/HUB2/refs/heads/main/NOTIFDAPATWILDPET")
+    end
+end)
+
+clickHopIf12M.MouseButton1Click:Connect(function()
+    state.HopIf12M = not state.HopIf12M
+    save()
+    update()
+
+    if state.HopIf12M then
+        run("https://raw.githubusercontent.com/juraganzenx/HUB2/refs/heads/main/Hopif%20%3E%2012m")
+    end
+end)
+
 
 --// AUTO RUN ON START
 for k, v in pairs(state) do
@@ -346,6 +373,14 @@ for k, v in pairs(state) do
 
         if k == "CollectSeed" then
             run("https://raw.githubusercontent.com/juraganzenx/HUB2/refs/heads/main/COLLECTSEED")
+        end
+
+        if k == "NotifDiscord" then
+            run("https://raw.githubusercontent.com/juraganzenx/HUB2/refs/heads/main/NOTIFDAPATWILDPET")
+        end
+
+        if k == "HopIf12M" then
+            run("https://raw.githubusercontent.com/juraganzenx/HUB2/refs/heads/main/Hopif%20%3E%2012m")
         end
 
     end
