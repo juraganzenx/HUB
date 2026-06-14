@@ -4,6 +4,9 @@ local UIS = game:GetService("UserInputService")
 
 local CONFIG_FILE = "autosettingsHUB2.json"
 
+
+local CONFIG_URL = "https://raw.githubusercontent.com/juraganzenx/Config/refs/heads/main/HUB2.json"
+
 local state = {
     HarvestAll = false,
     SellAll = false,
@@ -12,18 +15,17 @@ local state = {
     ToGarden = false
 }
 
---// LOAD CONFIG
-if isfile and isfile(CONFIG_FILE) then
-    local ok, data = pcall(function()
-        return HttpService:JSONDecode(readfile(CONFIG_FILE))
-    end)
+-- LOAD CONFIG DARI GITHUB
+pcall(function()
+    local data = game:HttpGet(CONFIG_URL)
+    local decoded = HttpService:JSONDecode(data)
 
-    if ok and type(data) == "table" then
-        for k, v in pairs(data) do
+    if type(decoded) == "table" then
+        for k, v in pairs(decoded) do
             state[k] = v
         end
     end
-end
+end)
 
 local function save()
     if writefile then
