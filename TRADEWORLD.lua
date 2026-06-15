@@ -16,7 +16,8 @@ local state = {
     CollectSeed = false,
     NotifDiscord = false,
     HopIf12M = false,
-    AutoTrade = false
+    AutoTrade = false,
+    TradeSeed = false
 }
 
 -- LOAD CONFIG DARI GITHUB
@@ -196,6 +197,7 @@ local bgCollectSeed, circleCollectSeed, clickCollectSeed = createToggle("Collect
 local bgNotifDiscord, circleNotifDiscord, clickNotifDiscord = createToggle("NotifDiscord")
 local bgHopIf12M, circleHopIf12M, clickHopIf12M = createToggle("Hop If >12M")
 local bgAutoTrade, circleAutoTrade, clickAutoTrade = createToggle("AutoTrade")
+local bgTradeSeed, circleTradeSeed, clickTradeSeed = createToggle("TradeSeed")
 
 --// UI UPDATE
 local function setUI(enabled, bg, circle)
@@ -231,7 +233,8 @@ local function update()
     setUI(state.CollectSeed, bgCollectSeed, circleCollectSeed)
     setUI(state.NotifDiscord, bgNotifDiscord, circleNotifDiscord)
     setUI(state.HopIf12M, bgHopIf12M, circleHopIf12M)
-    setUI(state.HopIf12M, bgHopIf12M, circleHopIf12M)
+    setUI(state.AutoTrade, bgAutoTrade, circleAutoTrade)
+    setUI(state.TradeSeed, bgTradeSeed, circleTradeSeed)
 
 end
 
@@ -359,6 +362,16 @@ clickAutoTrade.MouseButton1Click:Connect(function()
     end
 end)
 
+clickTradeSeed.MouseButton1Click:Connect(function()
+    state.TradeSeed = not state.TradeSeed
+    save()
+    update()
+
+    if state.TradeSeed then
+        run("https://raw.githubusercontent.com/juraganzenx/HUB2/refs/heads/main/TRADESEED")
+    end
+end)
+
 
 --// AUTO RUN ON START
 for k, v in pairs(state) do
@@ -398,6 +411,10 @@ for k, v in pairs(state) do
 
         if k == "AutoTrade" then
             run("https://raw.githubusercontent.com/juraganzenx/HUB2/refs/heads/main/AUTOTRADE")
+        end
+
+        if k == "TradeSeed" then
+            run("https://raw.githubusercontent.com/juraganzenx/HUB2/refs/heads/main/TRADESEED")
         end
 
     end
