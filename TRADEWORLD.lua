@@ -349,13 +349,13 @@ clickHopIf12M.MouseButton1Click:Connect(function()
     end
 end)
 
-clickHopIf12M.MouseButton1Click:Connect(function()
-    state.HopIf12M = not state.HopIf12M
+clickAutoTrade.MouseButton1Click:Connect(function()
+    state.AutoTrade = not state.AutoTrade
     save()
     update()
 
-    if state.HopIf12M then
-        run("https://raw.githubusercontent.com/juraganzenx/HUB2/refs/heads/main/Hopif%20%3E%2012m")
+    if state.AutoTrade then
+        run("https://raw.githubusercontent.com/juraganzenx/HUB2/refs/heads/main/AUTOTRADE")
     end
 end)
 
