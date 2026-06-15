@@ -15,7 +15,8 @@ local state = {
     ToGarden = false,
     CollectSeed = false,
     NotifDiscord = false,
-    HopIf12M = false
+    HopIf12M = false,
+    AutoTrade = false
 }
 
 -- LOAD CONFIG DARI GITHUB
@@ -194,6 +195,7 @@ local bgToGarden, circleToGarden, clickToGarden = createToggle("ToGarden")
 local bgCollectSeed, circleCollectSeed, clickCollectSeed = createToggle("CollectSeed")
 local bgNotifDiscord, circleNotifDiscord, clickNotifDiscord = createToggle("NotifDiscord")
 local bgHopIf12M, circleHopIf12M, clickHopIf12M = createToggle("Hop If >12M")
+local bgAutoTrade, circleAutoTrade, clickAutoTrade = createToggle("AutoTrade")
 
 --// UI UPDATE
 local function setUI(enabled, bg, circle)
@@ -228,6 +230,7 @@ local function update()
     setUI(state.ToGarden, bgToGarden, circleToGarden)
     setUI(state.CollectSeed, bgCollectSeed, circleCollectSeed)
     setUI(state.NotifDiscord, bgNotifDiscord, circleNotifDiscord)
+    setUI(state.HopIf12M, bgHopIf12M, circleHopIf12M)
     setUI(state.HopIf12M, bgHopIf12M, circleHopIf12M)
 
 end
@@ -346,6 +349,16 @@ clickHopIf12M.MouseButton1Click:Connect(function()
     end
 end)
 
+clickHopIf12M.MouseButton1Click:Connect(function()
+    state.HopIf12M = not state.HopIf12M
+    save()
+    update()
+
+    if state.HopIf12M then
+        run("https://raw.githubusercontent.com/juraganzenx/HUB2/refs/heads/main/Hopif%20%3E%2012m")
+    end
+end)
+
 
 --// AUTO RUN ON START
 for k, v in pairs(state) do
@@ -381,6 +394,10 @@ for k, v in pairs(state) do
 
         if k == "HopIf12M" then
             run("https://raw.githubusercontent.com/juraganzenx/HUB2/refs/heads/main/Hopif%20%3E%2012m")
+        end
+
+        if k == "AutoTrade" then
+            run("https://raw.githubusercontent.com/juraganzenx/HUB2/refs/heads/main/AUTOTRADE")
         end
 
     end
