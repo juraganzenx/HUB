@@ -17,7 +17,8 @@ local state = {
     NotifDiscord = false,
     HopIf12M = false,
     AutoTrade = false,
-    TradeSeed = false
+    TradeSeed = false,
+    DestroyPlot = false
 }
 
 -- LOAD CONFIG DARI GITHUB
@@ -198,6 +199,7 @@ local bgNotifDiscord, circleNotifDiscord, clickNotifDiscord = createToggle("Noti
 local bgHopIf12M, circleHopIf12M, clickHopIf12M = createToggle("Hop If >12M")
 local bgAutoTrade, circleAutoTrade, clickAutoTrade = createToggle("AutoTrade")
 local bgTradeSeed, circleTradeSeed, clickTradeSeed = createToggle("TradeSeed")
+local bgDestroyPlot, circleDestroyPlot, clickDestroyPlot = createToggle("DestroyPlot")
 
 --// UI UPDATE
 local function setUI(enabled, bg, circle)
@@ -235,6 +237,7 @@ local function update()
     setUI(state.HopIf12M, bgHopIf12M, circleHopIf12M)
     setUI(state.AutoTrade, bgAutoTrade, circleAutoTrade)
     setUI(state.TradeSeed, bgTradeSeed, circleTradeSeed)
+    setUI(state.DestroyPlot, bgDestroyPlot, circleDestroyPlot)
 
 end
 
@@ -372,6 +375,16 @@ clickTradeSeed.MouseButton1Click:Connect(function()
     end
 end)
 
+clickDestroyPlot.MouseButton1Click:Connect(function()
+    state.DestroyPlot = not state.DestroyPlot
+    save()
+    update()
+
+    if state.DestroyPlot then
+        run("https://raw.githubusercontent.com/juraganzenx/HUB2/refs/heads/main/DESTROYPLOT")
+    end
+end)
+
 
 --// AUTO RUN ON START
 for k, v in pairs(state) do
@@ -415,6 +428,10 @@ for k, v in pairs(state) do
 
         if k == "TradeSeed" then
             run("https://raw.githubusercontent.com/juraganzenx/HUB2/refs/heads/main/TRADESEED")
+        end
+
+        if k == "DestroyPlot" then
+            run("https://raw.githubusercontent.com/juraganzenx/HUB2/refs/heads/main/DESTROYPLOT")
         end
 
     end
