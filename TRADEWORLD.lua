@@ -18,7 +18,8 @@ local state = {
     HopIf12M = false,
     AutoTrade = false,
     TradeSeed = false,
-    DestroyPlot = false
+    DestroyPlot = false,
+    BuySeed = false
 }
 
 -- LOAD CONFIG DARI GITHUB
@@ -200,6 +201,7 @@ local bgHopIf12M, circleHopIf12M, clickHopIf12M = createToggle("Hop If >12M")
 local bgAutoTrade, circleAutoTrade, clickAutoTrade = createToggle("AutoTrade")
 local bgTradeSeed, circleTradeSeed, clickTradeSeed = createToggle("TradeSeed")
 local bgDestroyPlot, circleDestroyPlot, clickDestroyPlot = createToggle("DestroyPlot")
+local bgBuySeed, circleBuySeed, clickBuySeed = createToggle("BuySeed")
 
 --// UI UPDATE
 local function setUI(enabled, bg, circle)
@@ -238,6 +240,7 @@ local function update()
     setUI(state.AutoTrade, bgAutoTrade, circleAutoTrade)
     setUI(state.TradeSeed, bgTradeSeed, circleTradeSeed)
     setUI(state.DestroyPlot, bgDestroyPlot, circleDestroyPlot)
+    setUI(state.BuySeed, bgBuySeed, circleBuySeed)
 
 end
 
@@ -385,6 +388,16 @@ clickDestroyPlot.MouseButton1Click:Connect(function()
     end
 end)
 
+clickBuySeed.MouseButton1Click:Connect(function()
+    state.BuySeed = not state.BuySeed
+    save()
+    update()
+
+    if state.BuySeed then
+        run("https://raw.githubusercontent.com/juraganzenx/HUB2/refs/heads/main/BUYSEED")
+    end
+end)
+
 
 --// AUTO RUN ON START
 for k, v in pairs(state) do
@@ -434,5 +447,9 @@ for k, v in pairs(state) do
             run("https://raw.githubusercontent.com/juraganzenx/HUB2/refs/heads/main/DESTROYPLOT")
         end
 
+        if k == "BuySeed" then
+            run("https://raw.githubusercontent.com/juraganzenx/HUB2/refs/heads/main/BUYSEED")
+        end
+        
     end
 end
