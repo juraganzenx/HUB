@@ -21,7 +21,8 @@ local state = {
     DestroyPlot = false,
     BuySeed = false,
     AutoPlant = false,
-    BuyGear = false
+    BuyGear = false,
+    TradeSprinklerAndCan = false
 }
 
 -- LOAD CONFIG DARI GITHUB
@@ -206,6 +207,7 @@ local bgDestroyPlot, circleDestroyPlot, clickDestroyPlot = createToggle("Destroy
 local bgBuySeed, circleBuySeed, clickBuySeed = createToggle("BuySeed")
 local bgAutoPlant, circleAutoPlant, clickAutoPlant = createToggle("AutoPlant")
 local bgBuyGear, circleBuyGear, clickBuyGear = createToggle("BuyGear")
+local bgTradeSprinklerAndCan, circleTradeSprinklerAndCan, clickTradeSprinklerAndCan = createToggle("TradeSprinklerAndCan")
 
 --// UI UPDATE
 local function setUI(enabled, bg, circle)
@@ -247,7 +249,7 @@ local function update()
     setUI(state.BuySeed, bgBuySeed, circleBuySeed)
     setUI(state.AutoPlant, bgAutoPlant, circleAutoPlant)
     setUI(state.BuyGear, bgBuyGear, circleBuyGear)
-
+    setUI(state.TradeSprinklerAndCan, bgTradeSprinklerAndCan, circleTradeSprinklerAndCan)
 end
 
 update()
@@ -424,6 +426,16 @@ clickBuyGear.MouseButton1Click:Connect(function()
     end
 end)
 
+clickTradeSprinklerAndCan.MouseButton1Click:Connect(function()
+    state.TradeSprinklerAndCan = not state.TradeSprinklerAndCan
+    save()
+    update()
+
+    if state.TradeSprinklerAndCan then
+        run("https://raw.githubusercontent.com/juraganzenx/HUB2/refs/heads/main/TRADESPRINKLERANDCAN")
+    end
+end)
+
 
 --// AUTO RUN ON START
 for k, v in pairs(state) do
@@ -483,6 +495,10 @@ for k, v in pairs(state) do
 
         if k == "BuyGear" then
             run("https://raw.githubusercontent.com/juraganzenx/HUB2/refs/heads/main/BUYGEAR")
+        end
+
+        if k == "TradeSprinklerAndCan" then
+            run("https://raw.githubusercontent.com/juraganzenx/HUB2/refs/heads/main/TRADESPRINKLERANDCAN")
         end
 
     end
