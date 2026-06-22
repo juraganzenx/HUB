@@ -22,7 +22,8 @@ local state = {
     BuySeed = false,
     AutoPlant = false,
     BuyGear = false,
-    TradeSprinklerAndCan = false
+    TradeSprinklerAndCan = false,
+    PlaceSprinkler = false
 }
 
 -- LOAD CONFIG DARI GITHUB
@@ -208,6 +209,7 @@ local bgBuySeed, circleBuySeed, clickBuySeed = createToggle("BuySeed")
 local bgAutoPlant, circleAutoPlant, clickAutoPlant = createToggle("AutoPlant")
 local bgBuyGear, circleBuyGear, clickBuyGear = createToggle("BuyGear")
 local bgTradeSprinklerAndCan, circleTradeSprinklerAndCan, clickTradeSprinklerAndCan = createToggle("TradeSprinklerAndCan")
+local bgPlaceSprinkler, circlePlaceSprinkler, clickPlaceSprinkler = createToggle("PlaceSprinkler")
 
 --// UI UPDATE
 local function setUI(enabled, bg, circle)
@@ -250,6 +252,8 @@ local function update()
     setUI(state.AutoPlant, bgAutoPlant, circleAutoPlant)
     setUI(state.BuyGear, bgBuyGear, circleBuyGear)
     setUI(state.TradeSprinklerAndCan, bgTradeSprinklerAndCan, circleTradeSprinklerAndCan)
+    setUI(state.PlaceSprinkler, bgPlaceSprinkler, circlePlaceSprinkler)
+
 end
 
 update()
@@ -436,6 +440,16 @@ clickTradeSprinklerAndCan.MouseButton1Click:Connect(function()
     end
 end)
 
+clickPlaceSprinkler.MouseButton1Click:Connect(function()
+    state.PlaceSprinkler = not state.PlaceSprinkler
+    save()
+    update()
+
+    if state.PlaceSprinkler then
+        run("https://raw.githubusercontent.com/juraganzenx/HUB2/refs/heads/main/PLACESPRINKLER")
+    end
+end)
+
 
 --// AUTO RUN ON START
 for k, v in pairs(state) do
@@ -499,6 +513,10 @@ for k, v in pairs(state) do
 
         if k == "TradeSprinklerAndCan" then
             run("https://raw.githubusercontent.com/juraganzenx/HUB2/refs/heads/main/TRADESPRINKLERANDCAN")
+        end
+
+        if k == "PlaceSprinkler" then
+           run("https://raw.githubusercontent.com/juraganzenx/HUB2/refs/heads/main/PLACESPRINKLER")
         end
 
     end
